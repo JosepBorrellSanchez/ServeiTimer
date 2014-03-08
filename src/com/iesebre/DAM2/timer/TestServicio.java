@@ -1,53 +1,55 @@
 package com.iesebre.DAM2.timer;
 
 import java.util.Timer;
-
+import java.util.TimerTask;
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.Menu;
+import android.os.Looper;
 import android.widget.TextView;
-
-public class MainActivity extends Service {
-
-	 public static Activity ACTIVIDAD;
-	    private Timer timer = null;
-	 
-	    public static void establecerActividadPrincipal(Activity actividad)
-	    {
-	        MainActivity.ACTIVIDAD=actividad;
-	    }
-	    
-	    
-	public void onCreate(Bundle savedInstanceState)
+import android.widget.Toast;
+import android.util.Log;
+ 
+public class TestServicio extends Service
+{
+    public static Activity ACTIVIDAD;
+    private Timer timer = null;
+ 
+    public static void establecerActividadPrincipal(Activity actividad)
+    {
+        TestServicio.ACTIVIDAD=actividad;
+    }
+ 
+    public void onCreate()
     {
         super.onCreate();
-        this.iniciarServicio();
-        
-        Log.i(getClass().getSimpleName(), "Servicio iniciado");
+ 
         // Iniciamos el servicio
         this.iniciarServicio();
+ 
+        Log.i(getClass().getSimpleName(), "Servicio iniciado");
     }
  
     public void onDestroy()
     {
         super.onDestroy();
-        this.finalizarServicio();
-        
-        Log.i(getClass().getSimpleName(), "Servicio detenido");
+ 
         // Detenemos el servicio
         this.finalizarServicio();
+ 
+        Log.i(getClass().getSimpleName(), "Servicio detenido");
     }
  
     public IBinder onBind(Intent intent)
     {
-        // No usado de momento
+        // No usado de momento, sólo se usa si se va a utilizar IPC
+        // (Inter-Process Communication) para comunicarse entre procesos
         return null;
     }
-
+ 
     public void iniciarServicio()
     {
         try
@@ -56,21 +58,9 @@ public class MainActivity extends Service {
  
             // Creamos el timer
             this.timer=new Timer();
-            long period = 1000;
-            long wheen = 0;
  
             // Configuramos lo que tiene que hacer
-            this.timer.scheduleAtFixedRate ( new MainActivity() {
-            	public void run() {
-            		ejecutarTarea(); }
-            }
-            	, 0, 1000);// Cada segundo );
-            
-            this.timer.scheduleAtFixedRate(new MainActivity(){
-            	public void run(){
-            		ejecutarTarea();}
-            	}
-            , wheen, period);
+            this.timer.scheduleAtFixedRate ( new TimerTask() { public void run() { ejecutarTarea(); } }, 0, 1000);
  
             Log.i(getClass().getSimpleName(), "Temporizador iniciado");
         }
@@ -102,11 +92,11 @@ public class MainActivity extends Service {
         Log.i(getClass().getSimpleName(), "Ejecutando tarea...");
  
         // Reflejamos la tarea en la actividad principal
-        MainActivity.ACTIVIDAD.runOnUiThread ( new Runnable()
+        TestServicio.ACTIVIDAD.runOnUiThread ( new Runnable()
         {
             public void run()
             {
-                TextView ejecuciones=(TextView)MainActivity.ACTIVIDAD.findViewById(R.id.TextView01);
+                TextView ejecuciones=(TextView)TestServicio.ACTIVIDAD.findViewById(R.id.TextView01);
                 ejecuciones.append(".");
             }
         } );

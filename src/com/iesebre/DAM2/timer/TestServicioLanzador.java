@@ -17,6 +17,7 @@ public class TestServicioLanzador extends Activity
  
     public void onCreate(Bundle savedInstanceState)
     {
+    	super.onCreate(savedInstanceState);
         // Iniciamos y establecemos el layout super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
  
@@ -25,7 +26,7 @@ public class TestServicioLanzador extends Activity
         this.ejecuciones=(TextView)findViewById(R.id.TextView01);
  
         // Establecemos la actividad principal para el servicio
-        MainActivity.ACTIVIDAD=this;
+        TestServicio.ACTIVIDAD=this;
  
         // Iniciamos el servicio
         try
@@ -33,7 +34,7 @@ public class TestServicioLanzador extends Activity
             Log.i(getClass().getSimpleName(), "Iniciando servicio desde la actividad...");
  
             // Cogemos el intent el servicio
-            Intent servicio = new Intent(this, MainActivity.class);
+            Intent servicio = new Intent(this, TestServicio.class);
  
             // Lo ejecutamos
             if(startService(servicio)==null)
@@ -61,7 +62,7 @@ public class TestServicioLanzador extends Activity
             Log.i(getClass().getSimpleName(), "Finalizando el servicio desde la actividad...");
  
             // Cogemos el intent el servicio
-            Intent servicio = new Intent(this, MainActivity.class);
+            Intent servicio = new Intent(this, TestServicio.class);
  
             // Lo ejecutamos
             if(stopService(servicio))
